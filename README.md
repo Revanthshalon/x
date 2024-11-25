@@ -1,5 +1,6 @@
 # X Utils Library
 [![Format](https://github.com/Revanthshalon/x/actions/workflows/format.yml/badge.svg)](https://github.com/Revanthshalon/x/actions/workflows/format.yml) [![Lint](https://github.com/Revanthshalon/x/actions/workflows/lint.yml/badge.svg)](https://github.com/Revanthshalon/x/actions/workflows/lint.yml) [![Security Audit](https://github.com/Revanthshalon/x/actions/workflows/audit.yml/badge.svg)](https://github.com/Revanthshalon/x/actions/workflows/audit.yml)
+
 A collection of utility modules providing robust error handling, tracing, and UUID generation functionality for Rust applications.
 
 ## Features
