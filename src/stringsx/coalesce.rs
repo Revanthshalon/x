@@ -1,3 +1,16 @@
+//! String Utility Functions
+//!
+//! This module provides utility functions for working with strings and string slices.
+//! Functions include:
+//! - `coalesce`: Find first non-empty string in a slice
+//!
+//! # Example
+//! ```
+//! use string_utils::coalesce;
+//! let words = ["", "first", "second"];
+//! assert_eq!(coalesce(&words), "first");
+//! ```
+
 /// Returns the first non-empty string from the slice, or an empty string if none found
 ///
 /// # Arguments

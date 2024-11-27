@@ -1,3 +1,20 @@
+//! String case conversion utilities
+//!
+//! This module provides functions for converting the first character of strings between
+//! uppercase and lowercase.
+//!
+//! # Examples
+//!
+//! ```
+//! use crate::string_utils::{to_lower_initial, to_upper_inital};
+//!
+//! let upper = to_upper_inital(String::from("hello"));
+//! assert_eq!(upper, "Hello");
+//!
+//! let lower = to_lower_initial(String::from("World"));
+//! assert_eq!(lower, "world");
+//! ```
+
 /// Converts the first character of a string to lowercase
 ///
 /// # Arguments
