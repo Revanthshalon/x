@@ -6,12 +6,12 @@ A comprehensive collection of utility modules providing robust error handling, s
 ## Features
 
 ### Error Handling (`errorsx`)
-- Rich error context system with metadata support
-- HTTP status codes integration
-- Request ID tracking
-- Debug information attachment
-- Flexible key-value details storage
-- Builder pattern for easy error context construction
+- Enhanced error type with rich context and debugging information
+- Stack trace capture and source location tracking
+- HTTP status code and status message support
+- Context chain building
+- Source error linking
+- Builder pattern for flexible error construction
 - Implements standard Error and Display traits
 
 ### String Utilities (`stringsx`)
@@ -39,15 +39,20 @@ x = { git = "https://github.com/revanthshalon/x" }
 
 ## Usage Examples
 
-### Error Context
+### Enriched Errors
 
 ```rust
-use x::errorsx::ErrorContext;
+use x::errorsx::EnrichedErrors;
 
-let error = std::io::Error::new(std::io::ErrorKind::NotFound, "File not found");
-let context = ErrorContext::new(error)
-    .with_status_code(404)
-    .with_reason("The requested resource could not be found".to_string());
+// Simple error creation
+let error = EnrichedErrors::new("Operation failed");
+
+// Using the builder pattern
+let detailed_error = EnrichedErrors::builder("Failed to process file")
+    .with_context("Processing user upload")
+    .with_status_code(500)
+    .with_status("Internal Server Error")
+    .build();
 ```
 
 ### String Manipulation
@@ -72,27 +77,28 @@ use x::uuidx;
 let new_uuid = uuidx::generate_new_v4();
 ```
 
-## Available Traits
-
-The error handling system provides several carrier traits:
-
-- `StatusCodeCarrier`
-- `RequestIdCarrier`
-- `ReasonCarrier`
-- `DebugCarrier`
-- `StatusCarrier`
-- `DetailsCarrier`
-- `IdCarrier`
-
 ## Module Structure
 
 ```
 x/
-├── errorsx/     # Error handling utilities
+├── errorsx/     # Enhanced error handling with rich context
 ├── stringsx/    # String manipulation utilities
+│   ├── case.rs    # Case conversion functions
+│   └── coalesce.rs # String coalescing utilities
 ├── tracex/      # Tracing functionality (WIP)
 └── uuidx/       # UUID generation utilities
 ```
+
+## Features of EnrichedErrors
+
+- Detailed error messages
+- Stack trace capture
+- Source code location tracking
+- Context chain building
+- Source error linking
+- HTTP status codes
+- Status messages
+- Builder pattern for easy construction
 
 ## Requirements
 
