@@ -1,14 +1,14 @@
-//! # EnrichedErrors
+//! # Errorsx
 //!
 //! This module provides an enhanced error handling solution for Rust applications that need detailed
-//! error context and debugging information. The `EnrichedErrors` type combines error messages, stack
+//! error context and debugging information. The `Errorsx` type combines error messages, stack
 //! traces, source locations, and additional contextual information into a comprehensive error type.
 //!
 //! ## Overview
 //!
 //! The main components are:
-//! - `EnrichedErrors`: The core error type that holds all error details
-//! - `EnrichedErrorsBuilder`: A builder pattern implementation for constructing errors
+//! - `Errorsx`: The core error type that holds all error details
+//! - `ErrorsxBuilder`: A builder pattern implementation for constructing errors
 //!
 //! ## Usage Scenarios
 //!
@@ -19,7 +19,7 @@
 //!
 //! ### Example
 //! ```rust
-//! let err = EnrichedErrors::builder("Failed to process file")
+//! let err = Errorsx::builder("Failed to process file")
 //!     .with_context("Processing user upload")
 //!     .with_source(io_error)
 //!     .build();
@@ -38,7 +38,7 @@ use std::{backtrace::Backtrace, error::Error, fmt::Display, panic::Location};
 /// * `status_code` - Optional HTTP status code associated with the error
 /// * `status` - Optional status message associated with the error
 #[derive(Debug)]
-pub struct EnrichedErrors {
+pub struct Errorsx {
     message: String,
     backtrace: Backtrace,
     location: &'static Location<'static>,
@@ -48,10 +48,10 @@ pub struct EnrichedErrors {
     status: Option<String>,
 }
 
-/// Display implementation for EnrichedErrors
+/// Display implementation for Errorsx
 ///
 /// Formats the error information including context and backtrace for display
-impl Display for EnrichedErrors {
+impl Display for Errorsx {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let context_info = self.context.join(",");
         let location_info = format!(
@@ -67,10 +67,10 @@ impl Display for EnrichedErrors {
     }
 }
 
-/// Error implementation for EnrichedErrors
+/// Error implementation for Errorsx
 ///
 /// Provides access to the underlying source error if one exists
-impl Error for EnrichedErrors {
+impl Error for Errorsx {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
         self.source
             .as_ref()
@@ -78,7 +78,7 @@ impl Error for EnrichedErrors {
     }
 }
 
-/// Builder for constructing EnrichedErrors with a fluent interface
+/// Builder for constructing Errorsx with a fluent interface
 ///
 /// # Fields
 /// * `message` - The main error message
@@ -88,7 +88,7 @@ impl Error for EnrichedErrors {
 /// * `status_code` - Optional HTTP status code
 /// * `status` - Optional status message
 #[derive(Debug)]
-pub struct EnrichedErrorsBuilder {
+pub struct ErrorsxBuilder {
     message: String,
     context: Vec<String>,
     location: &'static Location<'static>,
@@ -97,14 +97,14 @@ pub struct EnrichedErrorsBuilder {
     status: Option<String>,
 }
 
-impl EnrichedErrorsBuilder {
-    /// Creates a new EnrichedErrorsBuilder with the given message
+impl ErrorsxBuilder {
+    /// Creates a new ErrorsxBuilder with the given message
     ///
     /// # Parameters
     /// * `message` - The error message to use, anything that can be converted into a String
     ///
     /// # Returns
-    /// A new EnrichedErrorsBuilder instance initialized with the message
+    /// A new ErrorsxBuilder instance initialized with the message
     #[track_caller]
     pub fn new(message: impl Into<String>) -> Self {
         Self {
@@ -165,12 +165,12 @@ impl EnrichedErrorsBuilder {
         self
     }
 
-    /// Builds and returns the final EnrichedErrors instance
+    /// Builds and returns the final Errorsx instance
     ///
     /// # Returns
-    /// An EnrichedErrors instance with all the configured properties
-    pub fn build(self) -> EnrichedErrors {
-        EnrichedErrors {
+    /// An Errorsx instance with all the configured properties
+    pub fn build(self) -> Errorsx {
+        Errorsx {
             message: self.message,
             context: self.context,
             location: self.location,
@@ -182,29 +182,29 @@ impl EnrichedErrorsBuilder {
     }
 }
 
-impl EnrichedErrors {
-    /// Creates a new EnrichedErrors with just a message
+impl Errorsx {
+    /// Creates a new Errorsx with just a message
     ///
     /// # Parameters
     /// * `message` - The error message, anything that can be converted into a String
     ///
     /// # Returns
-    /// A new EnrichedErrors instance
+    /// A new Errorsx instance
     #[track_caller]
     pub fn new(message: impl Into<String>) -> Self {
-        EnrichedErrorsBuilder::new(message).build()
+        ErrorsxBuilder::new(message).build()
     }
 
-    /// Creates a new EnrichedErrorsBuilder to construct an error with more options
+    /// Creates a new ErrorsxBuilder to construct an error with more options
     ///
     /// # Parameters
     /// * `message` - The error message, anything that can be converted into a String
     ///
     /// # Returns
-    /// An EnrichedErrorsBuilder instance for fluent construction
+    /// An ErrorsxBuilder instance for fluent construction
     #[track_caller]
-    pub fn builder(message: impl Into<String>) -> EnrichedErrorsBuilder {
-        EnrichedErrorsBuilder::new(message)
+    pub fn builder(message: impl Into<String>) -> ErrorsxBuilder {
+        ErrorsxBuilder::new(message)
     }
 
     /// Gets the error message
