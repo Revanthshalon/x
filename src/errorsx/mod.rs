@@ -35,6 +35,8 @@ use std::{backtrace::Backtrace, error::Error, fmt::Display, panic::Location};
 /// * `location` - Source code location where error was created
 /// * `context` - Vector of context strings providing additional error details
 /// * `source` - Optional source error that caused this error
+/// * `status_code` - Optional HTTP status code associated with the error
+/// * `status` - Optional status message associated with the error
 #[derive(Debug)]
 pub struct EnrichedErrors {
     message: String,
@@ -42,8 +44,8 @@ pub struct EnrichedErrors {
     location: &'static Location<'static>,
     context: Vec<String>,
     source: Option<Box<dyn Error + Send + Sync + 'static>>,
-    status_code: u32,
-    status: String,
+    status_code: Option<u32>,
+    status: Option<String>,
 }
 
 /// Display implementation for EnrichedErrors
@@ -83,12 +85,16 @@ impl Error for EnrichedErrors {
 /// * `context` - Vector of context strings
 /// * `location` - Source code location
 /// * `source` - Optional source error
+/// * `status_code` - Optional HTTP status code
+/// * `status` - Optional status message
 #[derive(Debug)]
 pub struct EnrichedErrorsBuilder {
     message: String,
     context: Vec<String>,
     location: &'static Location<'static>,
     source: Option<Box<dyn Error + Send + Sync + 'static>>,
+    status_code: Option<u32>,
+    status: Option<String>,
 }
 
 impl EnrichedErrorsBuilder {
@@ -106,6 +112,8 @@ impl EnrichedErrorsBuilder {
             context: Vec::new(),
             location: Location::caller(),
             source: None,
+            status_code: None,
+            status: None,
         }
     }
 
@@ -133,6 +141,30 @@ impl EnrichedErrorsBuilder {
         self
     }
 
+    /// Sets the HTTP status code for this error
+    ///
+    /// # Parameters
+    /// * `status_code` - The HTTP status code to associate with this error
+    ///
+    /// # Returns
+    /// Self with the status code set for chaining
+    pub fn with_status_code(mut self, status_code: u32) -> Self {
+        self.status_code = Some(status_code);
+        self
+    }
+
+    /// Sets a status message for this error
+    ///
+    /// # Parameters
+    /// * `status` - The status message to associate with this error
+    ///
+    /// # Returns
+    /// Self with the status message set for chaining
+    pub fn with_status(mut self, status: impl Into<String>) -> Self {
+        self.status = Some(status.into());
+        self
+    }
+
     /// Builds and returns the final EnrichedErrors instance
     ///
     /// # Returns
@@ -144,6 +176,8 @@ impl EnrichedErrorsBuilder {
             location: self.location,
             backtrace: Backtrace::force_capture(),
             source: self.source,
+            status_code: self.status_code,
+            status: self.status,
         }
     }
 }
@@ -203,5 +237,21 @@ impl EnrichedErrors {
     /// The Backtrace
     pub fn backtrace(&self) -> &Backtrace {
         &self.backtrace
+    }
+
+    /// Gets the HTTP status code if one was set
+    ///
+    /// # Returns
+    /// Optional HTTP status code associated with the error
+    pub fn status_code(&self) -> &Option<u32> {
+        &self.status_code
+    }
+
+    /// Gets the status message if one was set
+    ///
+    /// # Returns
+    /// Optional status message string associated with the error
+    pub fn status(&self) -> &Option<String> {
+        &self.status
     }
 }
